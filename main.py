@@ -1,5 +1,3 @@
-
-
 import pygame
 import subprocess
 
@@ -15,10 +13,18 @@ BG = pygame.transform.scale(pygame.image.load("bg.jpg"),(WIDHT, HEIGHT))
 text_font = pygame.font.SysFont("impact",70)
 RED = (255, 0, 0)
 BLUE =(51, 102, 255)
-SQUARE_SIZE = 50
+SQUARE_SIZE = 25
 
 start_img = pygame.image.load("start_btn.png").convert_alpha()
 exit_img = pygame.image.load("exit_btn.png").convert_alpha()
+
+
+
+def draw_square_red(x, y):
+    pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE, SQUARE_SIZE))
+
+def draw_square_blue(x, y):
+    pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
 
 
@@ -83,29 +89,26 @@ while run:
             run=False
 
 
-    
- #plane1
-    pygame.draw.rect(WIN,RED,(80,140,25,25))
-    pygame.draw.rect(WIN,BLUE,(107,140,25,25))
-    pygame.draw.rect(WIN,BLUE,(134,140,25,25))
-    pygame.draw.rect(WIN,BLUE,(161,140,25,25))
-    pygame.draw.rect(WIN,BLUE,(134,167,25,25))
-    pygame.draw.rect(WIN,BLUE,(134,113,25,25))
+#plane1  
+    draw_square_red(80, 140)
+    draw_square_blue(107, 140)
+    draw_square_blue(134, 140)
+    draw_square_blue(161, 140)
+    draw_square_blue(134, 167)
+    draw_square_blue(134, 113)
 
-
- #plane2
-    pygame.draw.rect(WIN,RED,(867,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,362,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,389,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,443,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,470,25,25))
-    pygame.draw.rect(WIN,BLUE,(786,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(840,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,443,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,389,25,25))
-
+#plane2
+    draw_square_red(867, 416)
+    draw_square_blue(813, 362)
+    draw_square_blue(813, 389)
+    draw_square_blue(813, 416)
+    draw_square_blue(813, 443)
+    draw_square_blue(813, 470)
+    draw_square_blue(786, 416)
+    draw_square_blue(759, 416)
+    draw_square_blue(840, 416)
+    draw_square_blue(759, 443)
+    draw_square_blue(759, 389)
 
     
 
