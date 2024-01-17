@@ -22,15 +22,6 @@ exit_img = pygame.image.load("exit_btn.png").convert_alpha()
 
 
 
-def draw_square_red(x, y):
-    pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE, SQUARE_SIZE))
-
-
-def draw_square_blue(x, y):
-    pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
-
-
-
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     WIN.blit(img, (x,y))
