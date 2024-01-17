@@ -12,6 +12,7 @@ WHITE=(255,255,255)
 RED = (255, 0, 0)
 BLUE =(51, 102, 255)
 SQUARE_SIZE = 50
+SQUARE_SIZE_DISPLAY = 25
 GAP_SIZE = 5
 OFFSET_X, OFFSET_Y = 80, 55
 
@@ -24,6 +25,12 @@ def draw_square_red(x, y):
 
 def draw_square_blue(x, y):
     pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
+
+def draw_square_red_display(x, y):
+    pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE_DISPLAY, SQUARE_SIZE_DISPLAY))
+
+def draw_square_blue_display(x, y):
+    pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE_DISPLAY, SQUARE_SIZE_DISPLAY))
 
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
@@ -45,38 +52,35 @@ def draw_text(text, font, text_col, x, y):
             if (row == 0 and col == 3) or (row == 1 and col == 2) or (row == 1 and col == 3) or(row == 1 and col ==4 )or (row == 2 and col ==3 )or(row == 4 and col ==1 )or(row == 4 and col ==2 )or(row == 4 and col ==3 )or(row == 5 and col ==2 )or(row == 6 and col ==0 )or(row == 6 and col == 1)or(row ==6  and col ==2 )or(row == 6 and col == 3)or(row == 6 and col == 4)or(row == 7 and col == 2)or(row == 7 and col ==6 )or(row == 7 and col ==7 )or(row ==7  and col ==8 )or(row == 8 and col ==7 )or(row == 9 and col == 6)or(row == 9 and col ==8) :
                 draw_square_blue(square_x, square_y)
 
-#PLANE 1
-    pygame.draw.rect(WIN,RED,(770,130,25,25))
-    pygame.draw.rect(WIN,BLUE,(797,130,25,25))
-    pygame.draw.rect(WIN,BLUE,(824,130,25,25))
-    pygame.draw.rect(WIN,BLUE,(851,130,25,25))
-    pygame.draw.rect(WIN,BLUE,(824,157,25,25))
-    pygame.draw.rect(WIN,BLUE,(824,103,25,25))
+#PLANE1
+    draw_square_red_display(770, 130)
+    draw_square_blue_display(797, 130)
+    draw_square_blue_display(824, 130)
+    draw_square_blue_display(851, 130)
+    draw_square_blue_display(824, 157)
+    draw_square_blue_display(824, 103)
 
 #PLANE2
-    pygame.draw.rect(WIN,RED,(813,219,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,246,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,273,25,25))
-    pygame.draw.rect(WIN,BLUE,(786,246,25,25))
-    pygame.draw.rect(WIN,BLUE,(840,246,25,25))
-    pygame.draw.rect(WIN,BLUE,(840,300,25,25))
-    pygame.draw.rect(WIN,BLUE,(786,300,25,25))
-
+    draw_square_red_display(813, 219)
+    draw_square_blue_display(813, 246)
+    draw_square_blue_display(813, 273)
+    draw_square_blue_display(786, 246)
+    draw_square_blue_display(840, 246)
+    draw_square_blue_display(840, 300)
+    draw_square_blue_display(786, 300)
 
 #PLANE3
-    pygame.draw.rect(WIN,RED,(867,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,362,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,389,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,443,25,25))
-    pygame.draw.rect(WIN,BLUE,(813,470,25,25))
-    pygame.draw.rect(WIN,BLUE,(786,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(840,416,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,443,25,25))
-    pygame.draw.rect(WIN,BLUE,(759,389,25,25))
-
-
+    draw_square_red_display(867, 416)
+    draw_square_blue_display(813, 362)
+    draw_square_blue_display(813, 389)
+    draw_square_blue_display(813, 416)
+    draw_square_blue_display(813, 443)
+    draw_square_blue_display(813, 470)
+    draw_square_blue_display(786, 416)
+    draw_square_blue_display(759, 416)
+    draw_square_blue_display(840, 416)
+    draw_square_blue_display(759, 443)
+    draw_square_blue_display(759, 389)
 
 
 run = True
@@ -96,5 +100,3 @@ while run:
 
     pygame.display.flip()
    
-
-
