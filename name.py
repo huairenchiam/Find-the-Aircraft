@@ -1,4 +1,3 @@
-
 import pygame
 import sys
 import subprocess
@@ -13,9 +12,8 @@ pygame.display.set_caption("Player's name ")
 
 BG = pygame.transform.scale(pygame.image.load("bg.jpg"),(WIDHT, HEIGHT))
 text_font = pygame.font.SysFont("impact",40)
-clock = pygame.time.Clock()
-
 name_font = pygame.font.SysFont("comicsans",20)
+
 user_text =" "
 input_rect = pygame.Rect(440,320,150,32)
 color = pygame.Color('lightskyblue3')
@@ -34,40 +32,26 @@ def draw_square_blue(x, y):
 
 
 
-
-
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     WIN.blit(img, (x,y))
 
 
 
-
-
-
 def start_game():
-    global message_timer
     if user_text.strip():
         subprocess.run(["python", "game.py"])
    
     
 
 
-
-def draw():
-    WIN.blit(BG,(0,0))
-    draw_text("Enter  your  name :", text_font,(153,51,102),350,250)
-   
-    
-
-
-
-while True:
+run = True
+while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 start_game()
                 
@@ -79,6 +63,9 @@ while True:
 
             
 
+
+    WIN.blit(BG,(0,0))
+    draw_text("Enter  your  name :", text_font,(153,51,102),350,250)
     pygame.draw.rect(WIN,color,input_rect)
 
     text_surface = name_font.render(user_text,True,(153,51,102))
@@ -111,11 +98,11 @@ while True:
     pygame.draw.rect(WIN,BLUE,(759,389,25,25))
 
     pygame.display.flip()
-    clock.tick(60)
+    
  
 
 
-    draw()
+    
 
 
 
