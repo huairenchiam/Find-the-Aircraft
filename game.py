@@ -1,4 +1,3 @@
-
 import pygame
 pygame.font.init()
 
@@ -7,6 +6,7 @@ WIN = pygame.display.set_mode((WIDHT, HEIGHT))
 pygame.display.set_caption("Good Luck & Have Fun! ")
 
 BG = pygame.transform.scale(pygame.image.load("spbg.jpg"),(WIDHT, HEIGHT))
+text_font = pygame.font.SysFont("comicsans",20)
 
 WHITE=(255,255,255)
 RED = (255, 0, 0)
@@ -14,7 +14,7 @@ BLUE =(51, 102, 255)
 SQUARE_SIZE = 50
 GAP_SIZE = 5
 OFFSET_X, OFFSET_Y = 80, 55
-text_font = pygame.font.SysFont("comicsans",20)
+
 
 def draw_square_white(x, y):
     pygame.draw.rect(WIN, WHITE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
@@ -30,13 +30,7 @@ def draw_text(text, font, text_col, x, y):
     WIN.blit(img, (x,y))
     
 
-def draw():
-    WIN.blit(BG,(0,0))
-    pygame.draw.rect(WIN,(204,255,255),(700,80,250,500),border_radius =50)
-    pygame.draw.rect(WIN,(51,103,152),(725,528,200,35),border_radius =50)
-    draw_text("Find the Aircraft", text_font,(255,255,153),743,530)
-    
-    # Draw a 10x10 grid of squares
+
     for row in range(10):
         for col in range(10):
             square_x = OFFSET_X + col * (SQUARE_SIZE + GAP_SIZE)
@@ -83,31 +77,24 @@ def draw():
     pygame.draw.rect(WIN,BLUE,(759,389,25,25))
 
 
+
+
+run = True
+while run:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run=False
+
+
+    WIN.blit(BG,(0,0))
+    pygame.draw.rect(WIN,(204,255,255),(700,80,250,500),border_radius =50)
+    pygame.draw.rect(WIN,(51,103,152),(725,528,200,35),border_radius =50)
+    draw_text("Find the Aircraft", text_font,(255,255,153),743,530)
     
+
+
     pygame.display.flip()
-
-
-
-def main():
-
-    
-
-
-    run = True
-    while run:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                break
-
-  
-
-        draw()
-        
-       
-
-    pygame.quit()
    
 
-if __name__ == "__main__":
-    main()
+
