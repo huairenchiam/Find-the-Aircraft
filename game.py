@@ -1,4 +1,6 @@
 import pygame
+import random
+
 pygame.font.init()
 
 WIDHT, HEIGHT = 1000, 650
@@ -6,25 +8,418 @@ WIN = pygame.display.set_mode((WIDHT, HEIGHT))
 pygame.display.set_caption("Good Luck & Have Fun! ")
 
 BG = pygame.transform.scale(pygame.image.load("spbg.jpg"),(WIDHT, HEIGHT))
-text_font = pygame.font.SysFont("comicsans",20)
+text_font = pygame.font.SysFont("comicsans",17)
+
+clicked_block = []
+bottom_block = []
+block_empty = 0
+aircraft_body = 1
+aircraft_head = 2
+head_up = 1
+head_down = 2
+head_left = 3
+head_right = 4
 
 WHITE=(255,255,255)
+GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE =(51, 102, 255)
-SQUARE_SIZE = 50
+SQUARE_SIZE = 35
 SQUARE_SIZE_DISPLAY = 25
-GAP_SIZE = 5
-OFFSET_X, OFFSET_Y = 80, 55
+GAP_SIZE = 3
+OFFSET_X, OFFSET_Y = 15, 40
+
+size = 15
+
+def square_green(size):
+    global bottom_block, clicked_block
+    bottom_block = [[block_empty]*size for _ in range(size)]
+    clicked_block = [[False] * size for _ in range(size)]
 
 
-def draw_square_white(x, y):
-    pygame.draw.rect(WIN, WHITE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
+#check aircraft 1 validity 
+def aircraft_1_valid(head_direction, centre_i, centre_j):
+    size = len(bottom_block)
+
+    if head_direction == head_up:
+        return(
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 2 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j + 2] == block_empty
+        and bottom_block[centre_i][centre_j - 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j] == block_empty
+        and bottom_block[centre_i + 1][centre_j] == block_empty
+        )
     
-def draw_square_red(x, y):
-    pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE, SQUARE_SIZE))
+    elif head_direction == head_down:
+        return (
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 2 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j - 1] == block_empty
+        and bottom_block[centre_i][centre_j - 2] == block_empty
+        and bottom_block[centre_i - 1][centre_j] == block_empty
+        and bottom_block[centre_i + 1][centre_j] == block_empty
+        )
 
-def draw_square_blue(x, y):
-    pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
+    elif head_direction == head_left:
+        return (
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 2 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j - 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j] == block_empty
+        and bottom_block[centre_i - 2][centre_j] == block_empty
+        and bottom_block[centre_i + 1][centre_j] == block_empty
+        )
+
+    elif head_direction == head_right:
+        return (
+        0 <= centre_i + 2 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j - 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j] == block_empty
+        and bottom_block[centre_i + 1][centre_j] == block_empty
+        and bottom_block[centre_i + 2][centre_j] == block_empty
+    )
+    return False
+
+#check aircraft 2 validity 
+def aircraft_2_valid(head_direction, centre_i, centre_j):
+    size = len(bottom_block)
+
+    if head_direction == head_up:
+        return(
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 2 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j + 2] == block_empty
+        and bottom_block[centre_i - 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j - 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j - 1] == block_empty
+        )
+    
+    elif head_direction == head_down:
+        return(
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 2 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i - 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i][centre_j - 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j - 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j - 1] == block_empty
+        and bottom_block[centre_i][centre_j - 2] == block_empty
+        )
+
+    elif head_direction == head_left:
+        return (
+        0 <= centre_i + 1 < size
+        and 0 <= centre_i - 2 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i - 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i - 1][centre_j] == block_empty
+        and bottom_block[centre_i - 2][centre_j] == block_empty
+        and bottom_block[centre_i - 1][centre_j - 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j - 1] == block_empty
+        )
+
+    elif head_direction == head_right:
+        return (
+        0 <= centre_i + 2 < size
+        and 0 <= centre_i - 1 < size
+        and 0 <= centre_j + 1 < size
+        and 0 <= centre_j - 1 < size
+        and bottom_block[centre_i][centre_j] == block_empty
+        and bottom_block[centre_i - 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j + 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j] == block_empty
+        and bottom_block[centre_i + 2][centre_j] == block_empty
+        and bottom_block[centre_i - 1][centre_j - 1] == block_empty
+        and bottom_block[centre_i + 1][centre_j - 1] == block_empty
+    )
+    return False
+
+#check aircraft 3 validity 
+def aircraft_3_valid(head_direction, centre_i, centre_j):
+    size = len(bottom_block)
+
+    if head_direction == head_up:
+        return (
+            0 <= centre_i + 2 < size
+            and 0 <= centre_i - 2 < size
+            and 0 <= centre_j + 2 < size
+            and 0 <= centre_j - 2 < size
+            and bottom_block[centre_i][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j + 1] == block_empty
+            and bottom_block[centre_i - 1][centre_j] == block_empty
+            and bottom_block[centre_i - 2][centre_j] == block_empty
+            and bottom_block[centre_i + 1][centre_j] == block_empty
+            and bottom_block[centre_i + 2][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j - 1] == block_empty
+            and bottom_block[centre_i][centre_j - 2] == block_empty
+            and bottom_block[centre_i - 1][centre_j - 2] == block_empty
+            and bottom_block[centre_i + 1][centre_j - 2] == block_empty
+        )
+
+    elif head_direction == head_down:
+        return (
+            0 <= centre_i + 2 < size
+            and 0 <= centre_i - 2 < size
+            and 0 <= centre_j + 2 < size
+            and 0 <= centre_j - 2 < size
+            and bottom_block[centre_i][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j - 1] == block_empty
+            and bottom_block[centre_i - 1][centre_j] == block_empty
+            and bottom_block[centre_i - 2][centre_j] == block_empty
+            and bottom_block[centre_i + 1][centre_j] == block_empty
+            and bottom_block[centre_i + 2][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j + 1] == block_empty
+            and bottom_block[centre_i][centre_j + 2] == block_empty
+            and bottom_block[centre_i - 1][centre_j + 2] == block_empty
+            and bottom_block[centre_i - 2][centre_j + 2] == block_empty
+        )
+
+    elif head_direction == head_left:
+        return (
+            0 <= centre_i + 2 < size
+            and 0 <= centre_i - 2 < size
+            and 0 <= centre_j + 2 < size
+            and 0 <= centre_j - 2 < size
+            and bottom_block[centre_i][centre_j] == block_empty
+            and bottom_block[centre_i - 1][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j + 1] == block_empty
+            and bottom_block[centre_i][centre_j + 2] == block_empty
+            and bottom_block[centre_i][centre_j - 1] == block_empty
+            and bottom_block[centre_i][centre_j - 2] == block_empty
+            and bottom_block[centre_i + 1][centre_j] == block_empty
+            and bottom_block[centre_i + 2][centre_j] == block_empty
+            and bottom_block[centre_i + 2][centre_j + 1] == block_empty
+            and bottom_block[centre_i + 2][centre_j - 1] == block_empty
+        )
+
+    elif head_direction == head_right:
+        return (
+            0 <= centre_i + 2 < size
+            and 0 <= centre_i - 2 < size
+            and 0 <= centre_j + 2 < size
+            and 0 <= centre_j - 2 < size
+            and bottom_block[centre_i][centre_j] == block_empty
+            and bottom_block[centre_i + 1][centre_j] == block_empty
+            and bottom_block[centre_i][centre_j + 1] == block_empty
+            and bottom_block[centre_i][centre_j + 2] == block_empty
+            and bottom_block[centre_i][centre_j - 1] == block_empty
+            and bottom_block[centre_i][centre_j - 2] == block_empty
+            and bottom_block[centre_i - 1][centre_j] == block_empty
+            and bottom_block[centre_i - 2][centre_j] == block_empty
+            and bottom_block[centre_i - 2][centre_j + 1] == block_empty
+            and bottom_block[centre_i - 2][centre_j - 1] == block_empty
+        )
+
+    return False
+
+
+#Create aircraft 1
+def create_aircraft_1(size):
+    head_direction = random.randint(1, 4)
+    i_start = 3 if head_direction == head_left else 2
+    i_end = size - 2 if head_direction == head_right else size - 1
+    j_start = 3 if head_direction == head_up else 2
+    j_end = size - 2 if head_direction == head_down else size - 1
+    centre_i = random.randint(i_start, i_end)
+    centre_j = random.randint(j_start, j_end)
+
+    if not aircraft_1_valid(head_direction, centre_i, centre_j):
+        return False
+    
+    if head_direction == head_up:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j + 2] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+    
+    elif head_direction == head_down:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j - 2] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+
+    elif head_direction == head_left:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+
+    elif head_direction == head_right:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+
+    return True
+
+#Create aircraft 2
+def create_aircraft_2(size):
+    head_direction = random.randint(1, 4)
+    i_start = 3 if head_direction == head_left else 2
+    i_end = size - 2 if head_direction == head_right else size - 1
+    j_start = 3 if head_direction == head_up else 2
+    j_end = size - 2 if head_direction == head_down else size - 1
+    centre_i = random.randint(i_start, i_end)
+    centre_j = random.randint(j_start, j_end)
+
+    if not aircraft_2_valid(head_direction, centre_i, centre_j):
+        return False
+    
+    if head_direction == head_up:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j + 2] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j - 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j - 1] = aircraft_body
+    
+    elif head_direction == head_down:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j - 2] = aircraft_head
+        bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j - 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j - 1] = aircraft_body
+
+    elif head_direction == head_left:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j] = aircraft_head
+        bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i - 1][centre_j - 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j - 1] = aircraft_body
+
+    elif head_direction == head_right:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j] = aircraft_head
+        bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+        bottom_block[centre_i - 1][centre_j - 1] = aircraft_body
+        bottom_block[centre_i + 1][centre_j - 1] = aircraft_body
+
+    return True
+
+#Create aircraft 3
+def create_aircraft_3(size):
+    head_direction = random.randint(1, 4)
+    i_start = 3
+    i_end = size - 3
+    j_start = 3
+    j_end = size - 3
+    centre_i = random.randint(i_start, i_end)
+    centre_j = random.randint(j_start, j_end)
+
+    if not aircraft_3_valid(head_direction, centre_i, centre_j):
+        return False
+
+    if head_direction == head_up:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j + 1] = aircraft_head
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 2] = aircraft_body
+        bottom_block[centre_i - 1][centre_j - 2] = aircraft_body
+        bottom_block[centre_i + 1][centre_j - 2] = aircraft_body
+
+    elif head_direction == head_down:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_head
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j] = aircraft_body
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j + 2] = aircraft_body
+        bottom_block[centre_i - 1][centre_j + 2] = aircraft_body
+        bottom_block[centre_i - 2][centre_j + 2] = aircraft_body
+
+    elif head_direction == head_left:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j + 2] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 2] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j] = aircraft_body
+        bottom_block[centre_i + 2][centre_j + 1] = aircraft_body
+        bottom_block[centre_i + 2][centre_j - 1] = aircraft_body
+
+    elif head_direction == head_right:
+        bottom_block[centre_i][centre_j] = aircraft_body
+        bottom_block[centre_i + 1][centre_j] = aircraft_head
+        bottom_block[centre_i][centre_j + 1] = aircraft_body
+        bottom_block[centre_i][centre_j + 2] = aircraft_body
+        bottom_block[centre_i][centre_j - 1] = aircraft_body
+        bottom_block[centre_i][centre_j - 2] = aircraft_body
+        bottom_block[centre_i - 1][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j] = aircraft_body
+        bottom_block[centre_i - 2][centre_j + 1] = aircraft_body
+        bottom_block[centre_i - 2][centre_j - 1] = aircraft_body
+
+    return True
+
+def block(size):
+    global SQUARE_SIZE, OFFSET_X, OFFSET_Y
+    for i in range(size):
+        for j in range(size):
+            color = WHITE
+            if 0 <= i < len(clicked_block) and 0 <= j < len(clicked_block[i]):
+                if clicked_block[i][j]:
+                    color = [GREEN, BLUE, RED][bottom_block[i][j]]
+
+            rect_x = j * (SQUARE_SIZE + GAP_SIZE) + OFFSET_X
+            rect_y = i * (SQUARE_SIZE + GAP_SIZE) + OFFSET_Y
+            # https://youtu.be/YDP1Hk7uZFA?si=_Xg5COW1n0p35uGk
+            # pygame.draw.rect(screen, (255, 0, 0), (200, 100, 150, 150))
+            pygame.draw.rect(WIN, color, (rect_x, rect_y, SQUARE_SIZE, SQUARE_SIZE))
+
+block(size)
+
 
 def draw_square_red_display(x, y):
     pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE_DISPLAY, SQUARE_SIZE_DISPLAY))
@@ -35,68 +430,105 @@ def draw_square_blue_display(x, y):
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     WIN.blit(img, (x,y))
-    
+
+#DISPLAY_PLANE1
+    draw_square_red_display(645, 105)
+    draw_square_blue_display(672, 105)
+    draw_square_blue_display(699, 105)
+    draw_square_blue_display(726, 105)
+    draw_square_blue_display(699, 132)
+    draw_square_blue_display(699, 78)
+
+#DISPLAY_PLANE2
+    draw_square_red_display(688, 194)
+    draw_square_blue_display(688, 221)
+    draw_square_blue_display(688, 248)
+    draw_square_blue_display(661, 221)
+    draw_square_blue_display(715, 221)
+    draw_square_blue_display(715, 275)
+    draw_square_blue_display(661, 275)
+
+#DISPLAY_PLANE3
+    draw_square_red_display(732, 391)
+    draw_square_blue_display(705, 337)
+    draw_square_blue_display(705, 364)
+    draw_square_blue_display(705, 391)
+    draw_square_blue_display(705, 418)
+    draw_square_blue_display(705, 445)
+    draw_square_blue_display(678, 391)
+    draw_square_blue_display(651, 391)
+    draw_square_blue_display(651, 418)
+    draw_square_blue_display(651, 364)
 
 
-    for row in range(10):
-        for col in range(10):
-            square_x = OFFSET_X + col * (SQUARE_SIZE + GAP_SIZE)
-            square_y = OFFSET_Y + row * (SQUARE_SIZE + GAP_SIZE)
-            
-            draw_square_white(square_x, square_y)
+def game_start():
+    square_green(size)
+    max_running_times = 500
+# https://www.w3schools.com/python/python_sets.asp
+# thisset = {"apple", "banana", "cherry"}
+#    thisset.add("orange")
+#    print(thisset)
+    aircraft_types_created = set()
 
-            
-            if (row == 1 and col == 5) or (row == 6 and col == 7) or (row == 8 and col == 2):
-                draw_square_red(square_x, square_y)
+    while len(aircraft_types_created) < 3 and max_running_times > 0:
+        aircraft_type = random.choice(["Aircraft1", "Aircraft2", "Aircraft3"])
 
-            if (row == 0 and col == 3) or (row == 1 and col == 2) or (row == 1 and col == 3) or(row == 1 and col ==4 )or (row == 2 and col ==3 )or(row == 4 and col ==1 )or(row == 4 and col ==2 )or(row == 4 and col ==3 )or(row == 5 and col ==2 )or(row == 6 and col ==0 )or(row == 6 and col == 1)or(row ==6  and col ==2 )or(row == 6 and col == 3)or(row == 6 and col == 4)or(row == 7 and col == 2)or(row == 7 and col ==6 )or(row == 7 and col ==7 )or(row ==7  and col ==8 )or(row == 8 and col ==7 )or(row == 9 and col == 6)or(row == 9 and col ==8) :
-                draw_square_blue(square_x, square_y)
+        if aircraft_type in aircraft_types_created:
+            continue
 
-#PLANE1
-    draw_square_red_display(770, 130)
-    draw_square_blue_display(797, 130)
-    draw_square_blue_display(824, 130)
-    draw_square_blue_display(851, 130)
-    draw_square_blue_display(824, 157)
-    draw_square_blue_display(824, 103)
+        if aircraft_type == "Aircraft1":
+            aircraft_1_success = create_aircraft_1(size)
+            if aircraft_1_success:
+                aircraft_types_created.add(aircraft_type)
 
-#PLANE2
-    draw_square_red_display(813, 219)
-    draw_square_blue_display(813, 246)
-    draw_square_blue_display(813, 273)
-    draw_square_blue_display(786, 246)
-    draw_square_blue_display(840, 246)
-    draw_square_blue_display(840, 300)
-    draw_square_blue_display(786, 300)
+        elif aircraft_type == "Aircraft2":
+            aircraft_2_success = create_aircraft_2(size)
+            if aircraft_2_success:
+                aircraft_types_created.add(aircraft_type)
 
-#PLANE3
-    draw_square_red_display(867, 416)
-    draw_square_blue_display(813, 362)
-    draw_square_blue_display(813, 389)
-    draw_square_blue_display(813, 416)
-    draw_square_blue_display(813, 443)
-    draw_square_blue_display(813, 470)
-    draw_square_blue_display(786, 416)
-    draw_square_blue_display(759, 416)
-    draw_square_blue_display(840, 416)
-    draw_square_blue_display(759, 443)
-    draw_square_blue_display(759, 389)
+        elif aircraft_type == "Aircraft3":
+            aircraft_3_success = create_aircraft_3(size)
+            if aircraft_3_success:
+                aircraft_types_created.add(aircraft_type)
+
+        max_running_times -= 1
+
+    block(size)
+
+def block_event(event):
+#https://www.tutorialspoint.com/pygame/pygame_mouse_events.htm
+# if event.type == pygame.MOUSEMOTION:
+#        pos=event.pos 
+#        print ("x = {}, y = {}".format(pos[0], pos[1]))
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        x, y = event.pos
+        i = int((y - OFFSET_Y) // (SQUARE_SIZE + GAP_SIZE))
+        j = int((x - OFFSET_X) // (SQUARE_SIZE + GAP_SIZE))
+
+        if 0 <= i < size and 0 <= j < size and not clicked_block[i][j]:
+            clicked_block[i][j] = True
+            block(size)
 
 
 run = True
+game_start()
+
 while run:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run=False
+        block_event(event)
 
 
     WIN.blit(BG,(0,0))
-    pygame.draw.rect(WIN,(204,255,255),(700,80,250,500),border_radius =50)
-    pygame.draw.rect(WIN,(51,103,152),(725,528,200,35),border_radius =50)
-    draw_text("Find the Aircraft", text_font,(255,255,153),743,530)
+    pygame.draw.rect(WIN,(204,255,255),(600,50,200,500),border_radius =50)
+    pygame.draw.rect(WIN,(51,103,152),(622.5,498,155,35),border_radius =50)
+    draw_text("Find the Aircraft", text_font,(255,255,153),630,503)
     
-
+    block(size)
 
     pygame.display.flip()
+
+pygame.quit()
    
