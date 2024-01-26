@@ -41,6 +41,15 @@ def draw_text(text, font, text_col, x, y):
 
 def start_game():
     if user_text.strip():
+        with open("name.txt","a+") as f:
+            users = f.readlines()
+            user_exists = False
+            for user in users:
+                if user_text.strip() == user.strip():
+                    user_exists = True
+                    break
+            if not user_exists:
+                f.write(user_text.strip() + "\n")
         subprocess.run(["python", "game.py"])
    
     
