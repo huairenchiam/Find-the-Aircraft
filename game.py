@@ -1,14 +1,16 @@
 import pygame
 import random
+import subprocess
 
 pygame.font.init()
 
-WIDHT, HEIGHT = 1000, 650
-WIN = pygame.display.set_mode((WIDHT, HEIGHT))
+WIDTH, HEIGHT = 1000, 650
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Good Luck & Have Fun! ")
 
-BG = pygame.transform.scale(pygame.image.load("spbg.jpg"),(WIDHT, HEIGHT))
+BG = pygame.transform.scale(pygame.image.load("spbg.jpg"),(WIDTH, HEIGHT))
 text_font = pygame.font.SysFont("comicsans",17)
+score_font = pygame.font.SysFont("comicsans",50)
 
 clicked_block = []
 bottom_block = []
@@ -242,6 +244,8 @@ def aircraft_3_valid(head_direction, centre_i, centre_j):
     return False
 
 
+aircraft_heads = []
+
 #Create aircraft 1
 def create_aircraft_1(size):
     head_direction = random.randint(1, 4)
@@ -258,6 +262,7 @@ def create_aircraft_1(size):
     if head_direction == head_up:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j + 2] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j + 2))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_body
@@ -266,6 +271,7 @@ def create_aircraft_1(size):
     elif head_direction == head_down:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j - 2] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j - 2))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_body
@@ -274,6 +280,7 @@ def create_aircraft_1(size):
     elif head_direction == head_left:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i - 2][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i - 2, centre_j))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_body
@@ -282,6 +289,7 @@ def create_aircraft_1(size):
     elif head_direction == head_right:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i + 2][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i + 2, centre_j))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_body
@@ -305,6 +313,7 @@ def create_aircraft_2(size):
     if head_direction == head_up:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j + 2] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j + 2))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
@@ -314,6 +323,7 @@ def create_aircraft_2(size):
     elif head_direction == head_down:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j - 2] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j - 2))
         bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
@@ -323,6 +333,7 @@ def create_aircraft_2(size):
     elif head_direction == head_left:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i - 2][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i - 2, centre_j))
         bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_body
@@ -332,6 +343,7 @@ def create_aircraft_2(size):
     elif head_direction == head_right:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i + 2][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i + 2, centre_j))
         bottom_block[centre_i - 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i + 1][centre_j + 1] = aircraft_body
         bottom_block[centre_i + 1][centre_j] = aircraft_body
@@ -356,6 +368,7 @@ def create_aircraft_3(size):
     if head_direction == head_up:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j + 1] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j + 2))
         bottom_block[centre_i - 1][centre_j] = aircraft_body
         bottom_block[centre_i - 2][centre_j] = aircraft_body
         bottom_block[centre_i + 1][centre_j] = aircraft_body
@@ -368,6 +381,7 @@ def create_aircraft_3(size):
     elif head_direction == head_down:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j - 2))
         bottom_block[centre_i - 1][centre_j] = aircraft_body
         bottom_block[centre_i - 2][centre_j] = aircraft_body
         bottom_block[centre_i + 1][centre_j] = aircraft_body
@@ -380,6 +394,7 @@ def create_aircraft_3(size):
     elif head_direction == head_left:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i - 1][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i - 1, centre_j))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j + 2] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
@@ -392,6 +407,7 @@ def create_aircraft_3(size):
     elif head_direction == head_right:
         bottom_block[centre_i][centre_j] = aircraft_body
         bottom_block[centre_i + 1][centre_j] = aircraft_head
+        aircraft_heads.append((centre_i, centre_j + 1))
         bottom_block[centre_i][centre_j + 1] = aircraft_body
         bottom_block[centre_i][centre_j + 2] = aircraft_body
         bottom_block[centre_i][centre_j - 1] = aircraft_body
@@ -461,6 +477,7 @@ def draw_text(text, font, text_col, x, y):
     draw_square_blue_display(651, 364)
 
 
+
 def game_start():
     square_green(size)
     max_running_times = 500
@@ -495,7 +512,19 @@ def game_start():
 
     block(size)
 
+airplane_heads_clicked = 0
+CurrentScore = 0
+HighScore = 0
+
+with open("name.txt","r") as f:
+    lines = f.readlines()
+    last_line = lines[-1].strip()
+    user, score = last_line.rsplit(" ", 1)
+    HighScore = int(score)
+
+
 def block_event(event):
+    global airplane_heads_clicked, CurrentScore
 #https://www.tutorialspoint.com/pygame/pygame_mouse_events.htm
 # if event.type == pygame.MOUSEMOTION:
 #        pos=event.pos 
@@ -507,9 +536,29 @@ def block_event(event):
 
         if 0 <= i < size and 0 <= j < size and not clicked_block[i][j]:
             clicked_block[i][j] = True
+            CurrentScore += 1
             block(size)
+    
+            if (i, j) in aircraft_heads:
+                airplane_heads_clicked += 1
 
-
+                if airplane_heads_clicked == 3:
+                    with open("name.txt","r+") as f:
+                        lines = f.readlines()
+                        last_line = lines[-1].strip()
+                        # https://www.w3schools.com/python/python_ref_string.asp
+                        user, score = last_line.rsplit(" ", 1)
+                        score = int(score)
+                        if CurrentScore < score: 
+                            NewScore = CurrentScore
+                        else:
+                            NewScore = score
+                        newline = f"{user} {NewScore}" 
+                        f.seek(f.tell() - len(last_line)) 
+                        f.write(newline)            
+                    subprocess.run(["python", "win.py"]) 
+                    
+  
 run = True
 game_start()
 
@@ -525,7 +574,14 @@ while run:
     pygame.draw.rect(WIN,(204,255,255),(600,50,200,500),border_radius =50)
     pygame.draw.rect(WIN,(51,103,152),(622.5,498,155,35),border_radius =50)
     draw_text("Find the Aircraft", text_font,(255,255,153),630,503)
-    
+
+    pygame.draw.rect(WIN,(51,153,204),(810,50,180,100),border_radius =50)
+    draw_text("HighScore", text_font,(255,255,153),855,60)
+    draw_text(str(HighScore), score_font,(00,00,255),870,80)
+    pygame.draw.rect(WIN,(51,153,204),(810,200,180,100),border_radius =50)
+    draw_text("CurrentScore", text_font,(255,255,153),845,210)
+    draw_text(str(CurrentScore), score_font,(00,00,255),870,230)
+
     block(size)
 
     pygame.display.flip()
