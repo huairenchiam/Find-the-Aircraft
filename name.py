@@ -2,8 +2,9 @@
 import pygame
 import sys
 import subprocess
-pygame.font.init()
 
+pygame.font.init()
+pygame.mixer.init(()
 
 
 WIDHT, HEIGHT = 1000, 650
@@ -71,6 +72,10 @@ def start_game():
 
 
 run = True
+
+sound_effect = pygame.mixer.Sound("namese.mp3")
+sound_effect.play()
+
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
