@@ -67,28 +67,3 @@ while True:
             sys.exit()
 
     pygame.display.update()
-
-
-         
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    pygame.display.update()
-
-
-
-
-
-
-# 赢了的页面，“win” + leaderboard + “恭喜XXX赢了” + retry button + quit
-# 能力允许加“恭喜成功获得第几名，您已经超越了XX%的人。”
-# 在main加上current player，或者选择player
-# name.py: username放进name.txt 最后.
-# win.py: background，caption,soundeffect
-# game.py: high, current, win
-# 未完：给全部加上sound effect 和music，high score & current score，leaderboard
-# *leaderboard要username,score (看情况再加上时长，日期)
-# * 加上ai人声
