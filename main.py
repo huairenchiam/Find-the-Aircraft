@@ -1,8 +1,20 @@
+# *****************************************************************************************************
+# Program: main.py
+# Course: PSP0101 PROBLEM SOLVING AND PROGRAM DESIGN
+# Class: TL9L
+# Year: 2023/24 Trimester 1
+# Names: CHIAM HUAI REN | CHAN JIA HUI | LEONG WING YAN
+# IDs: 1221108202 | 1221106978 | 1221109537
+# Emails: 1221108202@student.mmu.edu.my | 1221106978@student.mmu.edu.my | 1221109537@student.mmu.edu.my
+# Phones: 0174024804 | 01156788803 | 01110808482
+# *****************************************************************************************************
+
+
+#Leong Wing Yan
 import pygame
 import subprocess
 
 pygame.font.init()
-pygame.mixer.init()
 
 
 WIDHT, HEIGHT = 1000, 650
@@ -15,6 +27,7 @@ text_font = pygame.font.SysFont("impact",70)
 RED = (255, 0, 0)
 BLUE =(51, 102, 255)
 SQUARE_SIZE = 25
+
 
 start_img = pygame.image.load("start_btn.png").convert_alpha()
 exit_img = pygame.image.load("exit_btn.png").convert_alpha()
@@ -40,7 +53,6 @@ def draw():
     draw_text("Find  the  Aircraft", text_font,(128,0,0),265,220)
 
 
-
 class Button():
     def __init__(self, x, y, image, scale):
         width, height = image.get_size()
@@ -57,11 +69,8 @@ class Button():
             if pygame.mouse.get_pressed()[0] == 1 and not self.clicked :
                 self.clicked = True
                 action = True
-                sound_effect = pygame.mixer.Sound("button.mp3")
-                sound_effect.play()
-                sound_effect.set_volume(0.5)
-                                
                
+            
 
         if pygame.mouse.get_pressed()[0] ==0:
             self.clicked = False
