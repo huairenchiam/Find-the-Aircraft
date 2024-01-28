@@ -1,12 +1,15 @@
+#Leong Wing Yan
 
 import pygame
 import sys
 import subprocess
 
 pygame.font.init()
-pygame.mixer.init(()
 
+#Chan Jia Hui
+pygame.mixer.init()
 
+#Leong Wing Yan
 WIDHT, HEIGHT = 1000, 650
 WIN = pygame.display.set_mode((WIDHT, HEIGHT))
 pygame.display.set_caption("Player's name ")
@@ -25,22 +28,19 @@ BLUE =(51, 102, 255)
 SQUARE_SIZE = 25
 
 
-
 def draw_square_red(x, y):
     pygame.draw.rect(WIN, RED,(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
 def draw_square_blue(x, y):
     pygame.draw.rect(WIN, BLUE,(x, y, SQUARE_SIZE, SQUARE_SIZE))
 
-
-
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     WIN.blit(img, (x,y))
 
 
-
 def start_game():
+    #Chan Jia Hui
     global user_text
     if user_text.strip():
         # https://www.geeksforgeeks.org/how-to-open-a-file-using-the-with-statement/
@@ -66,16 +66,17 @@ def start_game():
             f.truncate()
             f.writelines(lines)
 
+        #Leong Wing Yan
         subprocess.run(["python", "game.py"])
    
-    
-
 
 run = True
 
+#chan Jia Hui
 sound_effect = pygame.mixer.Sound("namese.mp3")
 sound_effect.play()
 
+#Leong Wing Yan
 while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -91,9 +92,6 @@ while run:
             else:
                user_text += event.unicode
 
-            
-
-
     WIN.blit(BG,(0,0))
     draw_text("Enter  your  name :", text_font,(153,51,102),350,250)
     pygame.draw.rect(WIN,color,input_rect)
@@ -103,8 +101,6 @@ while run:
 
     input_rect.w = max(100,text_surface.get_width()+10)
             
-
-
  #plane1
 
     draw_square_red(80, 140)
@@ -128,6 +124,7 @@ while run:
     draw_square_blue(759, 389)
 
     pygame.display.flip()
+    
     
  
 
