@@ -556,11 +556,16 @@ def block_event(event):
                         newline = f"{user} {NewScore}" 
                         f.seek(f.tell() - len(last_line)) 
                         f.write(newline)            
+                        pygame.mixer_music.pause()  
                     subprocess.run(["python", "win.py"]) 
                     
   
 run = True
 game_start()
+
+pygame.mixer_music.load("gamebgm.mp3")
+pygame.mixer_music.play(-1)
+pygame.mixer.music.set_volume(0.5)
 
 while run:
 
