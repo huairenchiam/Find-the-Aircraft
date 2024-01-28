@@ -40,16 +40,28 @@ def draw_text(text, font, text_col, x, y):
 
 
 def start_game():
+    global user_text
     if user_text.strip():
-        with open("name.txt","a+") as f:
-            users = f.readlines()
+        with open("name.txt", "r+", encoding="utf-8") as f:
+            lines = f.readlines()
             user_exists = False
-            for user in users:
-                if user_text.strip() == user.strip():
-                    user_exists = True
-                    break
+
+            for i, line in enumerate(lines):
+                if line.strip():
+                    user, score = line.strip().split()
+                    if user_text.strip() == user.strip():
+                        user_exists = True
+                        newline = f"{user} {score}\n"
+                        del lines[i]
+                        break
             if not user_exists:
-                f.write(user_text.strip() + "\n")
+                newline = f"{user_text.strip()} 0\n"
+
+            lines.append(newline)
+            f.seek(0)
+            f.truncate()
+            f.writelines(lines)
+
         subprocess.run(["python", "game.py"])
    
     
