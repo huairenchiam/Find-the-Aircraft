@@ -42,10 +42,12 @@ def draw_text(text, font, text_col, x, y):
 def start_game():
     global user_text
     if user_text.strip():
-        with open("name.txt", "r+", encoding="utf-8") as f:
+        # https://www.geeksforgeeks.org/how-to-open-a-file-using-the-with-statement/
+        with open("name.txt", "r+", encoding="utf-8") as f: 
             lines = f.readlines()
             user_exists = False
 
+            # https://www.geeksforgeeks.org/enumerate-in-python/
             for i, line in enumerate(lines):
                 if line.strip():
                     user, score = line.strip().split()
@@ -58,6 +60,7 @@ def start_game():
                 newline = f"{user_text.strip()} 0\n"
 
             lines.append(newline)
+            # https://www.w3schools.com/python/python_ref_file.asp
             f.seek(0)
             f.truncate()
             f.writelines(lines)
