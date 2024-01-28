@@ -2,6 +2,7 @@ import pygame
 import subprocess
 
 pygame.font.init()
+pygame.mixer.init()
 
 
 WIDHT, HEIGHT = 1000, 650
@@ -56,8 +57,11 @@ class Button():
             if pygame.mouse.get_pressed()[0] == 1 and not self.clicked :
                 self.clicked = True
                 action = True
+                sound_effect = pygame.mixer.Sound("button.mp3")
+                sound_effect.play()
+                sound_effect.set_volume(0.5)
+                                
                
-            
 
         if pygame.mouse.get_pressed()[0] ==0:
             self.clicked = False
